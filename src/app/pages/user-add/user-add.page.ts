@@ -3,6 +3,7 @@ import { User } from '../../models/user';
 import { Storage } from '@ionic/storage';
 import { AlertController } from '@ionic/angular';
 import { UserServiceService } from '../../services/user-service.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-user-add',
@@ -17,8 +18,11 @@ export class UserAddPage implements OnInit {
   constructor(
     private storage: Storage,
     public alertController: AlertController,
-    private userService: UserServiceService
-  ) { }
+    private userService: UserServiceService,
+    public toastController: ToastController
+  ) {
+
+   }
 
   ngOnInit() {
   }
@@ -27,6 +31,15 @@ export class UserAddPage implements OnInit {
     this.userService.pegaCEP(this.user.cep).subscribe(
       res => {
         console.log(res);
+        if(res.erro){
+          this.presentToast("CEP não localizado!!");
+        }else{
+        //this.user = res;
+        //this.user.cep = res.cep;
+        this.user.logradouro = res.logradouro;
+        this.user.bairro = res.bairro;
+        this.user.uf = res.uf;
+      }
       },
       error => {
         console.error(error)
@@ -60,5 +73,12 @@ export class UserAddPage implements OnInit {
     await alert.present();
   }
 
+  async presentToast(texto:string) {
+    const toast = await this.toastController.create({
+      message: texto,
+      duration: 2000
+    });
+    toast.present();
+  }
 
 }
