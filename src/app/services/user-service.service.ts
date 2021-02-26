@@ -18,6 +18,28 @@ export class UserServiceService {
     return this.http.get<User>(local);
   }
   add(usuario:User){
-    return this.firedb.collection<User>("usuarios").add(usuario)
+    return this.firedb.collection<User>("usuarios").add(
+    {
+      nome:usuario.nome,
+      email:usuario.email,
+      bairro:usuario.bairro,
+      cep :usuario.cep,
+      logradouro:usuario.logradouro,
+      localidade:usuario.localidade,
+      uf:usuario.uf,
+      complemento:usuario.complemento,
+      numero:usuario.numero,
+      senha:usuario.senha,
+      erro:usuario.erro
+    
+    }
+    )
   }
+
+  getAll(){
+    return this.firedb.collection<User>("usuarios").valueChanges(
+      
+    )
+  }
+    
 }
